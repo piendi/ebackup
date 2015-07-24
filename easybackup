@@ -1,0 +1,113 @@
+#!/bin/bash
+#
+#    easyBackup
+#    version 0.0.1
+#    (C) 2015 Dierk-Bent Piening <dierpiening@openldo.org>
+#
+#    Dieses Programm ist Freie Software: Sie können es unter den Bedingungen
+#    der GNU General Public License, wie von der Free Software Foundation,
+#    Version 3 der Lizenz oder (nach Ihrer Wahl) jeder neueren
+#    veröffentlichten Version, weiterverbreiten und/oder modifizieren.
+#
+#    Dieses Programm wird in der Hoffnung, dass es nützlich sein wird, aber
+#    OHNE JEDE GEWÄHRLEISTUNG, bereitgestellt; sogar ohne die implizite
+#    Gewährleistung der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK.
+#    Siehe die GNU General Public License für weitere Details.
+#
+#    Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
+#    Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
+#
+
+echo 'easyBackup 0.0.2';
+if [ "$1" = "man" ]; then
+	echo "easybackup <Quellverzeichnis> <Zielverzeichnis> <Backup Name> <Modus>"
+	exit 0;
+fi
+if [ "$#" != 4 ]; then
+	echo 'Error: Keine oder zu wenig Argumente übergeben!';
+	echo 'Geben "easybackup man" für hilfe ein'
+	echo 'Exit';
+	exit 0;
+fi
+if [ "$4" = "b" ]; then
+	if ! [ -d "$1" ];then
+		echo 'Error: Quellverzeichnis existiert nicht!';
+		echo 'Exit';
+		exit 0;
+	fi
+	if ! [ -d "$2" ];then
+		while true;
+		do
+			echo 'Zielverzeichnis existiert nicht!';
+			echo -n ' Soll das Verzeichnis erstellt werden (Ja/Nein) ?';
+			read yesNo;
+			if [ "$yesNo" = "Nein" ];then
+				echo 'Exit';
+				exit 0;
+			fi
+			if [ "$yesNo" = "Ja" ]; then
+				break
+			fi
+			echo "Ja / Nein. $was ?yesNo nicht verstanden"
+		done
+		sudo mkdir $2
+		sudo chmod 777 $2
+	fi
+	BACKUPFILE="$3"
+	if tar czvf ${2}/${BACKUPFILE}.tar $1
+	then
+		if ! tar tf ${2}/${BACKUPFILE}.tar &> /dev/null; then
+			echo 'Error: fehlerhaftes Archiv';
+			echo 'Exit'
+			exit 0;
+		fi
+			echo "Archiv $BACKUPFILE .tar fehlerfrei!"
+		echo "Backup für $1 erfolgreich in $2 angelegt!";
+		echo "Backup-Name: ${BACKUPFILE}.tar"
+		sudo chmod 777 ${2}/${BACKUPFILE}.tar
+	else
+		echo "Error: Backup wurde nicht durchgeführt!";
+		exit 0;
+	fi
+fi
+if [ "$4" = "r" ];then
+	if ! [ -d "$2" ];then
+		while true;
+		do
+			echo 'Zielverzeichnis existiert nicht!';
+			echo -n ' Soll das Verzeichnis erstellt werden (Ja/Nein) ?';
+			read yesNo;
+			if [ "$yesNo" = "Nein" ];then
+				echo 'Exit';
+				exit 0;
+			fi
+			if [ "$yesNo" = "Ja" ]; then
+				break
+			fi
+			echo "Ja / Nein. $yesNo nicht verstanden"
+		done
+		mkdir $2
+
+	fi
+	tmp=".backup_tmp";
+	BACKUPFILE="$3";
+	if ! tar tf ${1}/${BACKUPFILE}.tar &> /dev/null; then
+ 		echo 'Error: fehlerhaftes Archiv';
+		echo 'Exit';
+		exit 0;
+	fi
+	echo "Archiv fehlerfrei...";
+	echo "Stelle $3 in $2 wieder her... ";
+	mkdir ${2}/${tmp}
+	if sudo tar -xzf ${1}/${BACKUPFILE}.tar --show-transformed-names -C ${2}/${tmp}
+	then
+		sudo mv -i -v -u ${2}/${tmp}/${2}/* ${2};
+		cd ${2};
+		sudo rm -f -r ${tmp};
+		sudo chmod -R 777 ${2};
+		echo "Wiederherstellen von $4 in $2 erfolgreich!";
+	else
+		echo "Wiederherstellen nicht erfolgreich!";
+		exit 0;
+	fi
+fi
