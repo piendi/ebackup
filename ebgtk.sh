@@ -1,4 +1,10 @@
 #!/bin/bash
+# ebackup-gtk V. 0.0.1
+# (C) 2015 Dierk-Bent Piening 
+# dierk.bent.piening@gmail.com
+# http://anonsoju.org 
+# License: GPL V.3
+
 if ! zenity --info --text "EasyBackup GTK 0.0.1 \n(C) 2015 Dierk-Bent Piening \ndierk.bent.piening@gmail.com \nLicense: GPL"; then
   exit;
 fi
