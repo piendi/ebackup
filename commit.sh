@@ -6,7 +6,7 @@ if NAME=$(zenity --entry --text "Bitte geben sie den Gwünschten Commit-Title ei
   	{
 	if git add .; then 
 		{
-			zenity --text-info --text "Alle Dateien werden hinzugefügt";
+			zenity --info --text "Alle Dateien werden hinzugefügt";
 			if git commit -m "$NAME"; then
 				{
 					zenity ---info --text "Commit mit der Nachricht $NAME";
