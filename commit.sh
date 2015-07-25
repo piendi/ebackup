@@ -10,7 +10,7 @@ if NAME=$(zenity --entry --text "Bitte geben sie den Gwünschten Commit-Title ei
 			if git commit -m "$NAME"; then
 				{
 					zenity --text-info --text "Commit mit der Nachricht $NAME";
-					git push | zenity --text-info --width 530; 
+					git push | zenity --info --width 530; 
 				}
 			fi
 		}
