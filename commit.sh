@@ -17,7 +17,7 @@ if ! git commit -m "$NAME"; then
 		zenity --text-info --text "Commit mit der Nachricht $NAME";
 	}
 fi
-if ! git push >(zenity --text-info --width 530); then 
+if ! git push | zenity --text-info --width 530; then 
 	{
 	exit;
 	}
