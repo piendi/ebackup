@@ -5,7 +5,7 @@
 # http://anonsoju.org 
 # License: GPL V.3
 
-if ! zenity --info --text "EasyBackup GTK 0.0.1 \n(C) 2015 Dierk-Bent Piening \ndierk.bent.piening@gmail.com \nLicense: GPL"; then
+if ! zenity --info --text "EBackup GTK 0.0.1 \n(C) 2015 Dierk-Bent Piening \ndierk.bent.piening@gmail.com \nLicense: GPL"; then
   exit;
 fi
 ans=$(zenity  --list  --text "Modus wählen?" --checklist  --column "Pick" --column "options" FALSE "Backup" FALSE "Recovery" --separator=":"); 
